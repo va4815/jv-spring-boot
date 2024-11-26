@@ -1,5 +1,8 @@
 package com.northcoders.demospringbootapp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.northcoders.demospringbootapp.DAO.GeoResultDao;
 import model.City;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,7 @@ public class CityController {
 
     private static final String BASE_URL = "https://geocoding-api.open-meteo.com";
     private static WebClient webClient = WebClient.builder().baseUrl(BASE_URL).build();
+    private static ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping("/info")
     @ResponseBody
@@ -41,6 +45,13 @@ public class CityController {
         System.out.println(cityInfoStr);
 
         // convert the WebClient objects to our City model
+        try {
+            GeoResultDao resultDao = mapper.readValue(cityInfoStr, GeoResultDao.class);
+            System.out.println(resultDao);
+
+        } catch (JsonProcessingException e) {
+            System.err.println(e);
+        }
 
         // return back to the client
 
